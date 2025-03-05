@@ -1,13 +1,22 @@
-#pragma once
+#ifndef PINS_H
+#define PINS_H
 
-#define WRPWM 3
-#define WLPWM 4
-#define WEN 5
+// Receiver Input Pins
+#define CH1_PIN 2  // Throttle (Wheels)
+#define CH2_PIN 3  // Steering (Wheels)
+#define CH3_PIN 4  // Weapon Control
 
-#define RRPWM 6
-#define RLPWM 7
-#define REN 8
+// BTS7960 Motor Driver Pins (Wheels)
+#define RPWM 5  
+#define LPWM 6  
+#define REN 7   
+#define LEN 8   
 
-#define LRPWM 9
-#define LLPWM 10
-#define LEN 11
+// Weapon Motor Pins
+#define WPWM 9  
+#define WEN 10  
+
+// Emergency Stop Button
+#define EMERGENCY_STOP_PIN 11  
+
+#endif
