@@ -2,6 +2,7 @@
 #include "receiver.h"
 #include "motor_control.h"
 #include "failsafe.h"
+#include <Arduino.h>
 
 void setup() {
     Serial.begin(115200);
