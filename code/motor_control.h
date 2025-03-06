@@ -5,15 +5,19 @@
 #include "pins.h"
 
 void setupMotors() {
-    pinMode(RPWM, OUTPUT);
-    pinMode(LPWM, OUTPUT);
-    pinMode(REN, OUTPUT);
-    pinMode(LEN, OUTPUT);
+    pinMode(RRPWM, OUTPUT);
+    pinMode(RLPWM, OUTPUT);
+    pinMode(LRPWM, OUTPUT);
+    pinMode(LLPWM, OUTPUT);
+    pinMode(RREN, OUTPUT);
+    pinMode(RLEN, OUTPUT);
+    pinMode(LLEN, OUTPUT);
+    pinMode(LREN, OUTPUT);
     pinMode(WPWM, OUTPUT);
     pinMode(WEN, OUTPUT);
 
-    digitalWrite(REN, HIGH); 
-    digitalWrite(LEN, HIGH);
+    digitalWrite(RREN, HIGH); 
+    digitalWrite(LLEN, HIGH);
     digitalWrite(WEN, HIGH);  
 }
 
@@ -34,20 +38,20 @@ void controlMotors(int forwardVelocity, int turnVelocity, int weaponSpeed) {
 
     // Left wheel control
     if (leftSpeed > 0) {
-        analogWrite(LPWM, 0);
-        analogWrite(RPWM, leftSpeed);
+        analogWrite(LLPWM, 0);
+        analogWrite(LRPWM, leftSpeed);
     } else {
-        analogWrite(LPWM, -leftSpeed);
-        analogWrite(RPWM, 0);
+        analogWrite(LLPWM, -leftSpeed);
+        analogWrite(LRPWM, 0);
     }
 
     // Right wheel control
     if (rightSpeed > 0) {
-        analogWrite(LEN, 0);
-        analogWrite(REN, rightSpeed);
+        analogWrite(RLPWM, 0);
+        analogWrite(RLPWM, rightSpeed);
     } else {
-        analogWrite(LEN, -rightSpeed);
-        analogWrite(REN, 0);
+        analogWrite(RLPWM, -rightSpeed);
+        analogWrite(RRPWM, 0);
     }
 
     // Soft Start for Weapon Motor

@@ -13,8 +13,10 @@ void checkFailsafe() {
 }
 
 void stopMotors() {
-    analogWrite(RPWM, 0);
-    analogWrite(LPWM, 0);
+    analogWrite(RRPWM, 0);
+    analogWrite(RLPWM, 0);
+    analogWrite(LRPWM, 0);
+    analogWrite(LLPWM, 0);
     analogWrite(WPWM, 0);
 }
 
