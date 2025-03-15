@@ -6,14 +6,14 @@
 
 void setup() {
     Serial.begin(115200);
-    // pinMode(EMERGENCY_STOP_PIN, INPUT_PULLUP);
+    pinMode(EMERGENCY_STOP_PIN, INPUT_PULLUP);
  
-    // setupMotors();
+    setupMotors();
     setupReceiver();
 }
 
 void loop() {
-    // checkFailsafe();
+    checkFailsafe();
 
     updatePWMValues();
 
@@ -21,22 +21,22 @@ void loop() {
     Serial.print("\tSteering: "); Serial.print(steeringPWM);
     Serial.print("\tWeapon: "); Serial.println(weaponPWM);
 
-    // if (emergencyStop) {
-    //     stopMotors();
-    //     Serial.println("Emergency Stop Activated!");
-    //     return;
-    // }
+    if (emergencyStop) {
+        stopMotors();
+        Serial.println("Emergency Stop Activated!");
+        return;
+    }
 
     // Map PWM signals to velocity values
-    // int forwardVelocity = map(throttlePWM, 1000, 2000, -255, 255);
-    // int turnVelocity = map(steeringPWM, 1000, 2000, -255, 255);
-    // int weaponSpeed = map(weaponPWM, 1000, 2000, 0, 255);
+    int forwardVelocity = map(throttlePWM, 1000, 2000, 255, -255);
+    int turnVelocity = map(steeringPWM, 1000, 2000, 255, -255);
+    int weaponSpeed = map(weaponPWM, 1500, 2000, 0, 255);
 
-    // controlMotors(forwardVelocity, turnVelocity, weaponSpeed);
+    controlMotors(forwardVelocity, turnVelocity, weaponSpeed);
 
-    // Serial.print("Forward: "); Serial.print(forwardVelocity);
-    // Serial.print("\tTurn: "); Serial.print(turnVelocity);
-    // Serial.print("\tWeapon: "); Serial.println(weaponSpeed);
+    Serial.print("Forward: "); Serial.print(forwardVelocity);
+    Serial.print("\tTurn: "); Serial.print(turnVelocity);
+    Serial.print("\tWeapon: "); Serial.println(weaponSpeed);
 
     delay(50);
 }
