@@ -5,9 +5,9 @@
 // 3, 5, 6, 9, 10, and 11
 
 // Receiver Input Pins
-#define CH1_PIN 3 // Throttle (Wheels)
-#define CH2_PIN 5 // Steering (Wheels)
-#define CH3_PIN 4 // Weapon Control
+#define CH1_PIN 16 // Throttle (Wheels)
+#define CH2_PIN 17 // Steering (Wheels)
+#define CH3_PIN 18 // Weapon Control
 
 // BTS7960 Motor Driver Pins (Wheels) (Right)
 #define RRPWM 6
