@@ -1,42 +1,62 @@
 #include "pins.h"
-#include "receiver.h"
 #include "motor_control.h"
 #include "failsafe.h"
 #include <Arduino.h>
+#include "sbus.h"
 
-void setup() {
+
+bfs::SbusRx sbus_rx(&Serial2, S_BUS_IN, -1, true);
+
+bfs::SbusData data;
+
+void setup()
+{
     Serial.begin(115200);
-    pinMode(EMERGENCY_STOP_PIN, INPUT_PULLUP);
- 
+
+    /* Start SBUS communication */
+    sbus_rx.Begin();
+    Serial.println("SBUS Receiver Started!");
+
+    /* Initialize motors */
     setupMotors();
-    setupReceiver();
 }
 
-void loop() {
-    checkFailsafe();
+void loop()
+{
+    // Check failsafe conditions
+    // checkFailsafe();
 
-    updatePWMValues();
+    if (sbus_rx.Read())
+    {
+        /* Get SBUS data */
+        data = sbus_rx.data();
 
-    Serial.print("Throttle: "); Serial.print(throttlePWM);
-    Serial.print("\tSteering: "); Serial.print(steeringPWM);
-    Serial.print("\tWeapon: "); Serial.println(weaponPWM);
+        // Map SBUS values to motor control range
+        int throttle = map(data.ch[1], 172, 1811, 255, -255);  // CH1: Throttle
+        int steering = map(data.ch[0], 172, 1811, 255, -255);  // CH2: Steering
+        int weapon = map(data.ch[2], 172, 1811, 0, 255);       // CH3: Weapon control
 
-    if (emergencyStop) {
-        stopMotors();
-        Serial.println("Emergency Stop Activated!");
-        return;
+        /* Handle failsafe conditions */
+        if (data.failsafe)
+        {
+            Serial.println("⚠️ FAILSAFE TRIGGERED! ⚠️");
+            throttle = 0;
+            steering = 0;
+            weapon = 0;
+        }
+
+        if (data.lost_frame)
+        {
+            Serial.println("⚠️ FRAME LOST! ⚠️");
+            // We don’t necessarily stop the bot on a lost frame, only if failsafe triggers
+        }
+
+        /* Send values to motor control */
+        controlMotors(throttle, steering, weapon);
+
+        /* Debug Output */
+        Serial.print("Throttle: "); Serial.print(throttle);
+        Serial.print("\tSteering: "); Serial.print(steering);
+        Serial.print("\tWeapon: "); Serial.println(weapon);
     }
-
-    // Map PWM signals to velocity values
-    int forwardVelocity = map(throttlePWM, 1000, 2000, 255, -255);
-    int turnVelocity = map(steeringPWM, 1000, 2000, 255, -255);
-    int weaponSpeed = map(weaponPWM, 1500, 2000, 0, 255);
-
-    controlMotors(forwardVelocity, turnVelocity, weaponSpeed);
-
-    Serial.print("Forward: "); Serial.print(forwardVelocity);
-    Serial.print("\tTurn: "); Serial.print(turnVelocity);
-    Serial.print("\tWeapon: "); Serial.println(weaponSpeed);
-
-    delay(50);
 }
