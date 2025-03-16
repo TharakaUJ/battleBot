@@ -2,9 +2,7 @@
 #define PINS_H
 
 // Receiver Input Pins
-#define CH1_PIN 16 // Throttle (Wheels)
-#define CH2_PIN 17 // Steering (Wheels)
-#define CH3_PIN 18 // Weapon Control
+#define S_BUS_IN 16
 
 // BTS7960 Motor Driver Pins (Wheels) (Right)
 #define RRPWM 25
@@ -22,7 +20,13 @@
 #define WPWM 27
 #define WEN 14
 
-// Emergency Stop Button
-#define EMERGENCY_STOP_PIN 4
+#define NOISE_THRESHOLD 15    // Ignore small values < 15 in PWM
+
+#define THROTTLE_CHANNEL 1
+#define STEERING_CHANNEL 0
+#define WEAPON_CHANNEL 2
+#define KILL_SWITCH_CHANNEL 5 // Channel 6 (zero-based index)
+
+#define TIMEOUT_MS 500        // Stop bot if no SBUS data received in 500ms
 
 #endif
