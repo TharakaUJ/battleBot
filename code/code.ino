@@ -1,13 +1,12 @@
 #include "pins.h"
 #include "motor_control.h"
-#include "failsafe.h"
 #include <Arduino.h>
 #include "sbus.h"
 
-
 bfs::SbusRx sbus_rx(&Serial2, S_BUS_IN, -1, true);
-
 bfs::SbusData data;
+
+unsigned long lastSignalTime = 0; // Tracks last valid SBUS data
 
 void setup()
 {
@@ -23,23 +22,27 @@ void setup()
 
 void loop()
 {
-    // Check failsafe conditions
-    // checkFailsafe();
-
     if (sbus_rx.Read())
     {
         /* Get SBUS data */
         data = sbus_rx.data();
+        lastSignalTime = millis();  // Update last valid signal time
 
         // Map SBUS values to motor control range
-        int throttle = map(data.ch[1], 172, 1811, 255, -255);  // CH1: Throttle
-        int steering = map(data.ch[0], 172, 1811, 255, -255);  // CH2: Steering
-        int weapon = map(data.ch[2], 172, 1811, 0, 255);       // CH3: Weapon control
+        int throttle = map(data.ch[THROTTLE_CHANNEL], 172, 1811, 255, -255);  // CH1: Throttle
+        int steering = map(data.ch[STEERING_CHANNEL], 172, 1811, 255, -255);  // CH2: Steering
+        int weapon = map(data.ch[WEAPON_CHANNEL], 172, 1811, 0, 255);       // CH3: Weapon control
+        bool killSwitch = (data.ch[KILL_SWITCH_CHANNEL] > 1000); // CH6: Kill switch
+
+        /* Noise Filtering */
+        if (abs(throttle) < NOISE_THRESHOLD) throttle = 0;
+        if (abs(steering) < NOISE_THRESHOLD) steering = 0;
+        if (weapon < NOISE_THRESHOLD) weapon = 0;
 
         /* Handle failsafe conditions */
-        if (data.failsafe)
+        if (data.failsafe || killSwitch)
         {
-            Serial.println("⚠️ FAILSAFE TRIGGERED! ⚠️");
+            Serial.println("⚠️ EMERGENCY STOP! FAILSAFE or KILL SWITCH ACTIVE! ⚠️");
             throttle = 0;
             steering = 0;
             weapon = 0;
@@ -48,7 +51,6 @@ void loop()
         if (data.lost_frame)
         {
             Serial.println("⚠️ FRAME LOST! ⚠️");
-            // We don’t necessarily stop the bot on a lost frame, only if failsafe triggers
         }
 
         /* Send values to motor control */
@@ -57,6 +59,14 @@ void loop()
         /* Debug Output */
         Serial.print("Throttle: "); Serial.print(throttle);
         Serial.print("\tSteering: "); Serial.print(steering);
-        Serial.print("\tWeapon: "); Serial.println(weapon);
+        Serial.print("\tWeapon: "); Serial.print(weapon);
+        Serial.print("\tKill Switch: "); Serial.println(killSwitch ? "ON" : "OFF");
+    }
+
+    /* No Signal Timeout - If no SBUS data received in TIMEOUT_MS, stop the bot */
+    if (millis() - lastSignalTime > TIMEOUT_MS)
+    {
+        Serial.println("⛔ NO SIGNAL! STOPPING BOT ⛔");
+        controlMotors(0, 0, 0);  // Stop all motors
     }
 }

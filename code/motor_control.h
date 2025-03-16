@@ -5,20 +5,20 @@
 #include "pins.h"
 
 void setupMotors() {
-    // pinMode(RRPWM, OUTPUT);
-    // pinMode(RLPWM, OUTPUT);
-    // pinMode(LRPWM, OUTPUT);
-    // pinMode(LLPWM, OUTPUT);
-    // pinMode(RREN, OUTPUT);
-    // pinMode(RLEN, OUTPUT);
-    // pinMode(LLEN, OUTPUT);
-    // pinMode(LREN, OUTPUT);
-    // pinMode(WPWM, OUTPUT);
-    // pinMode(WEN, OUTPUT);
+    pinMode(RRPWM, OUTPUT);
+    pinMode(RLPWM, OUTPUT);
+    pinMode(LRPWM, OUTPUT);
+    pinMode(LLPWM, OUTPUT);
+    pinMode(RREN, OUTPUT);
+    pinMode(RLEN, OUTPUT);
+    pinMode(LLEN, OUTPUT);
+    pinMode(LREN, OUTPUT);
+    pinMode(WPWM, OUTPUT);
+    pinMode(WEN, OUTPUT);
 
-    // digitalWrite(RREN, HIGH); 
-    // digitalWrite(LLEN, HIGH);
-    // digitalWrite(WEN, HIGH);  
+    digitalWrite(RREN, HIGH); 
+    digitalWrite(LLEN, HIGH);
+    digitalWrite(WEN, HIGH);  
 }
 
 void softStart(int &currentSpeed, int targetSpeed) {

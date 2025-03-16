@@ -20,7 +20,13 @@
 #define WPWM 27
 #define WEN 14
 
-// Emergency Stop Button
-#define EMERGENCY_STOP_PIN 4
+#define NOISE_THRESHOLD 15    // Ignore small values < 15 in PWM
+
+#define THROTTLE_CHANNEL 1
+#define STEERING_CHANNEL 0
+#define WEAPON_CHANNEL 2
+#define KILL_SWITCH_CHANNEL 5 // Channel 6 (zero-based index)
+
+#define TIMEOUT_MS 500        // Stop bot if no SBUS data received in 500ms
 
 #endif
