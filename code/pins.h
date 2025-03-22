@@ -6,14 +6,14 @@
 
 // BTS7960 Motor Driver Pins (Wheels) (Right)
 #define RRPWM 25
-#define RLPWM 23
-#define RREN 32
+#define RLPWM 26
+#define RREN 34
 #define RLEN 33
 
 // BTS7960 Motor Driver Pins (Wheels) (Left)
-#define LRPWM 26
-#define LLPWM 22
-#define LREN 12
+#define LRPWM 19
+#define LLPWM 18
+#define LREN 21
 #define LLEN 13
 
 // Weapon Motor Pins

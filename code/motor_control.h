@@ -18,6 +18,8 @@ void setupMotors()
     pinMode(WEN, OUTPUT);
 
     digitalWrite(RREN, HIGH);
+    digitalWrite(RLEN, HIGH);
+    digitalWrite(LREN, HIGH);
     digitalWrite(LLEN, HIGH);
     digitalWrite(WEN, HIGH);
 }
@@ -46,7 +48,7 @@ void controlMotors(int forwardVelocity, int turnVelocity)
     if (rightSpeed > 0)
     {
         analogWrite(RLPWM, 0);
-        analogWrite(RLPWM, rightSpeed);
+        analogWrite(RRPWM, rightSpeed);
     }
     else
     {
