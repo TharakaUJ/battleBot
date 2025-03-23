@@ -10,17 +10,14 @@ void setupMotors()
     pinMode(RLPWM, OUTPUT);
     pinMode(LRPWM, OUTPUT);
     pinMode(LLPWM, OUTPUT);
-    pinMode(RREN, OUTPUT);
-    pinMode(RLEN, OUTPUT);
-    pinMode(LLEN, OUTPUT);
-    pinMode(LREN, OUTPUT);
-    pinMode(WPWM, OUTPUT);
+    pinMode(REN, OUTPUT);
+    pinMode(LEN, OUTPUT);
+    pinMode(WRPWM, OUTPUT);
+    pinMode(WLPWM, OUTPUT);
     pinMode(WEN, OUTPUT);
 
-    digitalWrite(RREN, HIGH);
-    digitalWrite(RLEN, HIGH);
-    digitalWrite(LREN, HIGH);
-    digitalWrite(LLEN, HIGH);
+    digitalWrite(REN, HIGH);
+    digitalWrite(LEN, HIGH);
     digitalWrite(WEN, HIGH);
 }
 
@@ -59,7 +56,16 @@ void controlMotors(int forwardVelocity, int turnVelocity)
 
 void controlWeapon(int weaponVelocity)
 {
-    analogWrite(WPWM, weaponVelocity);
+    if (weaponVelocity > 0)
+    {
+        analogWrite(WLPWM, 0);
+        analogWrite(WRPWM, weaponVelocity);
+    }
+    else
+    {
+        analogWrite(WLPWM, -weaponVelocity);
+        analogWrite(WRPWM, 0);
+    }    
 }
 
 #endif
