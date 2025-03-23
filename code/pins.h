@@ -26,7 +26,7 @@
 #define WEAPON_CHANNEL 2
 #define KILL_SWITCH_CHANNEL 5 // Channel 6 (zero-based index)
 #define WEAPON_STATE_CHANNEL 6 // Channel 7
-#define STEERING_INVERT_CHANNEL 6 // Channel 7
+#define STEERING_INVERT_CHANNEL 7 // Channel 8
 
 #define TIMEOUT_MS 500        // Stop bot if no SBUS data received in 500ms
 
