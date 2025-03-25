@@ -10,8 +10,8 @@
 #define REN 33
 
 // BTS7960 Motor Driver Pins (Wheels) (Left)
-#define LRPWM 19
-#define LLPWM 18
+#define LRPWM 18
+#define LLPWM 19
 #define LEN 21
 
 // Weapon Motor Pins
