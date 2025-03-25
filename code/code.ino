@@ -60,6 +60,10 @@ void loop()
             steering = 0;
             weapon = 0;
 
+            // Stop all motors. not having below two lines can cause serious accidents.
+            controlMotors(0, 0);
+            controlWeapon(0);
+
             restart(); // Restart system if kill switch is toggled
         }
 
