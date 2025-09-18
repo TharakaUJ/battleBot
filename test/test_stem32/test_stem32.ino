@@ -3,7 +3,7 @@
  * Tests basic functionality before running the main battle bot code
  */
 
-#include "pins.h"
+#include "../../STM32/pins.h"
 
 void setup() {
     Serial.begin(115200);
