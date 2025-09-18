@@ -4,12 +4,15 @@
 #include "receiver.h"
 #include "restart.h"
 
+// Declare Serial2 for STM32 (change pins as needed for your board)
+HardwareSerial Serial2(PA3, PA2); // RX, TX pins for STM32 Blue Pill
+
 unsigned long lastSignalTime = 0; // Tracks last valid SBUS data
 int prevWeapon = -1;              // Stores previous weapon value
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial2.begin(115200);
     delay(1000); // Wait for serial to initialize
 
     // Initialize receiver
@@ -18,7 +21,7 @@ void setup()
     /* Initialize motors */
     setupMotors();
     
-    Serial.println("STM32 BluePill Battle Bot Initialized!");
+    Serial2.println("STM32 BluePill Battle Bot Initialized!");
 }
 
 void loop()
@@ -57,7 +60,7 @@ void loop()
         /* Handle failsafe conditions */
         if (data.failsafe || killSwitch)
         {
-            Serial.println("⚠️ EMERGENCY STOP! FAILSAFE or KILL SWITCH ACTIVE! ⚠️");
+            Serial2.println("⚠️ EMERGENCY STOP! FAILSAFE or KILL SWITCH ACTIVE! ⚠️");
             throttle = 0;
             steering = 0;
             weapon = 0;
@@ -71,7 +74,7 @@ void loop()
 
         if (data.lost_frame)
         {
-            Serial.println("⚠️ FRAME LOST! ⚠️");
+            Serial2.println("⚠️ FRAME LOST! ⚠️");
         }
 
         /* Send values to motor control */
@@ -99,20 +102,20 @@ void loop()
         }
 
         /* Debug Output */
-        Serial.print("Throttle: ");
-        Serial.print(throttle);
-        Serial.print("\tSteering: ");
-        Serial.print(steering);
-        Serial.print("\tWeapon: ");
-        Serial.println(weapon);
-        Serial.print("\tKill Switch: ");
-        Serial.println(killSwitch ? "ON" : "OFF");
+        Serial2.print("Throttle: ");
+        Serial2.print(throttle);
+        Serial2.print("\tSteering: ");
+        Serial2.print(steering);
+        Serial2.print("\tWeapon: ");
+        Serial2.println(weapon);
+        Serial2.print("\tKill Switch: ");
+        Serial2.println(killSwitch ? "ON" : "OFF");
     }
 
     /* No Signal Timeout - If no SBUS data received in TIMEOUT_MS, stop the bot */
     if (millis() - lastSignalTime > TIMEOUT_MS)
     {
-        Serial.println("⛔ NO SIGNAL! STOPPING BOT ⛔");
+        Serial2.println("⛔ NO SIGNAL! STOPPING BOT ⛔");
         controlMotors(0, 0); // Stop all motors
         controlWeapon(0);
     }
