@@ -5,7 +5,7 @@
 #include "restart.h"
 
 // Declare Serial2 for STM32 (change pins as needed for your board)
-HardwareSerial Serial2(PA3, PA2); // RX, TX pins for STM32 Blue Pill
+HardwareSerial Serial2(RX, TX); // RX, TX pins for STM32 Blue Pill
 
 unsigned long lastSignalTime = 0; // Tracks last valid SBUS data
 int prevWeapon = -1;              // Stores previous weapon value

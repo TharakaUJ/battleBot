@@ -7,23 +7,33 @@
 // Receiver Input Pins
 #define S_BUS_IN PA10  // Serial1 RX pin for SBUS
 
-// BTS7960 Motor Driver Pins (Wheels) (Right)
-#define RRPWM PA0     // PWM-capable pin
-#define RLPWM PA1     // PWM-capable pin  
-#define REN PA8       // Digital pin
+// IBT_2 Motor Driver Pins (Left Motor) - JST near PB4-PB9
+#define LRPWM PA1     // PWM-capable pin (Timer 4, Channel 1)
+#define LLPWM PA0     // PWM-capable pin (Timer 4, Channel 2)
+#define LEN PB5       // Digital pin (Enable)
+#define LR_IS PB0     // Analog pin for right current sensing
+#define LL_IS PB1     // Analog pin for left current sensing
 
-// BTS7960 Motor Driver Pins (Wheels) (Left)
-#define LRPWM PA2     // PWM-capable pin
-#define LLPWM PA3     // PWM-capable pin
-#define LEN PA9       // Digital pin
+// IBT_2 Motor Driver Pins (Right Motor) - JST near PA7-PC13
+#define RRPWM PA6     // PWM-capable pin (Timer 3, Channel 2)
+#define RLPWM PA7     // PWM-capable pin (Timer 3, Channel 3)
+#define REN PA4       // Digital pin (Enable)
+#define RR_IS PA3     // Analog pin for right current sensing
+#define RL_IS PA2     // Analog pin for left current sensing
 
-// Weapon Motor Pins
-#define WLPWM PB0     // PWM-capable pin
-#define WRPWM PB1     // PWM-capable pin
-#define WEN PB10      // Digital pin
+// Weapon Motor Pins (if still needed)
+#define WLPWM PB6     // PWM-capable pin
+#define WRPWM PB7     // PWM-capable pin
+#define WEN PB8      // Digital pin
+
+// Buzzer Pin
+#define BUZZER_PIN PB12  // PWM-capable pin for buzzer/beeper
 
 // Built-in LED for status indication
 #define LED_PIN PC13  // Built-in LED on BluePill
+
+#define RX PB11
+#define TX PB10
 
 #define NOISE_THRESHOLD 15    // Ignore small values < 15 in PWM
 
