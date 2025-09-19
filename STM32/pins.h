@@ -32,8 +32,8 @@
 // Built-in LED for status indication
 #define LED_PIN PC13  // Built-in LED on BluePill
 
-#define RX PB11
-#define TX PB10
+#define RX_PIN PB11
+#define TX_PIN PB10
 
 #define NOISE_THRESHOLD 15    // Ignore small values < 15 in PWM
 
