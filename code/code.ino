@@ -6,16 +6,31 @@
 
 unsigned long lastSignalTime = 0; // Tracks last valid SBUS data
 int prevWeapon = -1;              // Stores previous weapon value
+bool weaponArmed = false;         // Tracks if weapon is armed
 
 void setup()
 {
     Serial.begin(115200);
+    delay(1000);  // Give time for serial to initialize
+    Serial.println("BattleBot starting up with ESC weapon control");
 
-    // initilize reciever
-    setupReciever();
+    // Initialize receiver
+    setupReceiver();  // Fixed spelling
 
-    /* Initialize motors */
+    /* Initialize motors and ESC */
     setupMotors();
+    
+    // Optional: Uncomment to run ESC calibration on first boot
+    // Serial.println("Starting ESC calibration routine...");
+    // calibrateWeaponESC();
+    
+    Serial.println("Motors and ESC initialized");
+    
+    // Send neutral signal to ESC to ensure proper startup
+    controlWeapon(0);
+    delay(500);  // Give ESC time to initialize
+    
+    Serial.println("System ready!");
 }
 
 void loop()
@@ -33,9 +48,8 @@ void loop()
         // 3-state switch (-1, 0, 1) -1 is the off state.
         int weaponState = map(data.ch[WEAPON_STATE_CHANNEL], 500, 1500, -1, 1); // 3-state switch (-1, 0, 1)
 
-        int weapon = map(data.ch[WEAPON_CHANNEL], 172, 1811, 0, 255); // CH3: Weapon control
+        int weapon = map(data.ch[WEAPON_CHANNEL], 172, 1811, 0, 255); // CH3: Weapon control (0-255 range for ESC)
         bool killSwitch = (data.ch[KILL_SWITCH_CHANNEL] > 1000);      // CH6: Kill switch
-
 
         // Invert steering if that channel is high
         if (data.ch[STEERING_INVERT_CHANNEL] > 1000)
@@ -60,9 +74,12 @@ void loop()
             steering = 0;
             weapon = 0;
 
-            // Stop all motors. not having below two lines can cause serious accidents.
+            // Immediately stop all motors
             controlMotors(0, 0);
-            controlWeapon(0);
+            controlWeapon(0);  // ESC to neutral position
+            
+            // Disarm weapon for safety
+            weaponArmed = false;
 
             restart(); // Restart system if kill switch is toggled
         }
@@ -75,25 +92,51 @@ void loop()
         /* Send values to motor control */
         controlMotors(throttle, steering);
 
-        /* Only update the weapon motor if the value changes */
-        if (weapon != prevWeapon || weaponState == -1)
+        /* Weapon ESC Control Logic */
+        if (weapon != prevWeapon || weaponState != lastWeaponState)
         {
-            int pwmval;
-            if (weaponState == -1)
-            { // If weapon is off, stop the motor
-                pwmval = 0;
+            int escValue;
+            
+            if (weaponState == -1) { 
+                // Weapon OFF state
+                escValue = 0;  // Neutral signal
+                weaponArmed = false;
+                Serial.println("Weapon: OFF");
             }
-            else if (weaponState == 1)
-            {
-                pwmval = -1 * weapon; // Reverse the weapon direction
+            else if (weaponState == 1) {
+                // Weapon ON state with direction 1
+                escValue = -1 * weapon;  // Negative = reverse direction
+                
+                // Arm notification (once)
+                if (!weaponArmed && weapon > 0) {
+                    Serial.println("⚠️ WEAPON ARMED ⚠️");
+                    weaponArmed = true;
+                }
             }
-            else
-            {
-                pwmval = weapon;
+            else {
+                // Weapon ON state with direction 2
+                escValue = weapon;  // Positive = forward direction
+                
+                // Arm notification (once)
+                if (!weaponArmed && weapon > 0) {
+                    Serial.println("⚠️ WEAPON ARMED ⚠️");
+                    weaponArmed = true;
+                }
             }
 
-            controlWeapon(pwmval);
-            prevWeapon = weapon; // Update previous value
+            // Update ESC with new value
+            controlWeapon(escValue);
+            prevWeapon = weapon;
+            lastWeaponState = weaponState;
+            
+            // Debug ESC value
+            if (escValue != 0) {
+                Serial.print("Weapon ESC: ");
+                Serial.print(escValue);
+                Serial.print(" (");
+                Serial.print(map(escValue, -255, 255, ESC_MIN_PULSE, ESC_MAX_PULSE));
+                Serial.println(" µs)");
+            }
         }
 
         /* Debug Output */
@@ -112,6 +155,7 @@ void loop()
     {
         Serial.println("⛔ NO SIGNAL! STOPPING BOT ⛔");
         controlMotors(0, 0); // Stop all motors
-        controlWeapon(0);
+        controlWeapon(0);    // ESC to neutral position
+        weaponArmed = false; // Disarm weapon
     }
 }

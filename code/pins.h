@@ -14,10 +14,13 @@
 #define LLPWM 19
 #define LEN 21
 
-// Weapon Motor Pins
-#define WLPWM 12
-#define WRPWM 14
-#define WEN 27
+// Weapon ESC Pin (changed from BTS7960 to single ESC pin)
+#define WEAPON_ESC_PIN 12  // Using one of the previous weapon pins
+
+// ESC constants
+#define ESC_MIN_PULSE 1000  // Minimum pulse width in microseconds (full reverse/brake)
+#define ESC_MID_PULSE 1500  // Neutral position
+#define ESC_MAX_PULSE 2000  // Maximum pulse width in microseconds (full forward)
 
 #define NOISE_THRESHOLD 15    // Ignore small values < 15 in PWM
 
