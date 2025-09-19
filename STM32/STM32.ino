@@ -3,7 +3,8 @@
 #include <Arduino.h>
 #include "receiver.h"
 #include "restart.h"
-#include "LED_colors.h"  // Add LED control
+#include "LED_colors.h"    // Add LED control
+#include "buzzer_control.h" // Add buzzer control
 
 // Declare Serial2 for STM32 (change pins as needed for your board)
 HardwareSerial Serial2(RX_PIN, TX_PIN); // RX, TX pins for STM32 Blue Pill
@@ -20,13 +21,18 @@ void setup()
     setupRGBLED();
     ledInitializing();  // Purple - System starting up
     
+    // Initialize buzzer
+    setupBuzzer();
+    buzzerStartup();    // Startup sound sequence
+    
     // Initialize receiver
     setupReceiver();
 
     /* Initialize motors */
     setupMotors();
     
-    ledReady();  // Green - System ready
+    ledReady();     // Green - System ready
+    buzzerReady();  // Ready beep
     Serial2.println("STM32 BluePill Battle Bot Initialized!");
 }
 
@@ -127,7 +133,7 @@ void loop()
         Serial2.print("\tSteering: ");
         Serial2.print(steering);
         Serial2.print("\tWeapon: ");
-        Serial2.println(weapon);
+        Serial2.print(weapon);
         Serial2.print("\tKill Switch: ");
         Serial2.println(killSwitch ? "ON" : "OFF");
     }
