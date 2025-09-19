@@ -29,6 +29,11 @@
 // Buzzer Pin
 #define BUZZER_PIN PB12  // PWM-capable pin for buzzer/beeper
 
+// RGB LED Pins
+#define RGB_RED_PIN   PB13   // PWM-capable pin for Red
+#define RGB_GREEN_PIN PB14   // PWM-capable pin for Green  
+#define RGB_BLUE_PIN  PB15   // PWM-capable pin for Blue
+
 // Built-in LED for status indication
 #define LED_PIN PC13  // Built-in LED on BluePill
 

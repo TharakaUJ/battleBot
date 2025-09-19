@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "receiver.h"
 #include "restart.h"
+#include "LED_colors.h"  // Add LED control
 
 // Declare Serial2 for STM32 (change pins as needed for your board)
 HardwareSerial Serial2(RX_PIN, TX_PIN); // RX, TX pins for STM32 Blue Pill
@@ -15,12 +16,17 @@ void setup()
     Serial2.begin(115200);
     delay(1000); // Wait for serial to initialize
 
+    // Initialize RGB LED
+    setupRGBLED();
+    ledInitializing();  // Purple - System starting up
+    
     // Initialize receiver
     setupReceiver();
 
     /* Initialize motors */
     setupMotors();
     
+    ledReady();  // Green - System ready
     Serial2.println("STM32 BluePill Battle Bot Initialized!");
 }
 
@@ -60,6 +66,7 @@ void loop()
         /* Handle failsafe conditions */
         if (data.failsafe || killSwitch)
         {
+            ledEmergency();  // Red - Emergency stop
             Serial2.println("⚠️ EMERGENCY STOP! FAILSAFE or KILL SWITCH ACTIVE! ⚠️");
             throttle = 0;
             steering = 0;
@@ -69,12 +76,25 @@ void loop()
             controlMotors(0, 0);
             controlWeapon(0);
 
+            if (killSwitch) {
+                ledKillSwitch();  // Orange - Kill switch specific
+            }
+
             restart(); // Restart system if kill switch is toggled
         }
-
-        if (data.lost_frame)
+        else if (data.lost_frame)
         {
+            ledFrameLost();  // Blue - Frame lost
             Serial2.println("⚠️ FRAME LOST! ⚠️");
+        }
+        else
+        {
+            // Normal operation - show weapon status
+            if (weaponState == 1 && weapon > 0) {
+                ledArmed();  // Yellow - Weapon armed and active
+            } else {
+                ledReady();  // Green - Ready/normal operation
+            }
         }
 
         /* Send values to motor control */
@@ -115,6 +135,7 @@ void loop()
     /* No Signal Timeout - If no SBUS data received in TIMEOUT_MS, stop the bot */
     if (millis() - lastSignalTime > TIMEOUT_MS)
     {
+        ledNoSignal();  // Magenta - No signal
         Serial2.println("⛔ NO SIGNAL! STOPPING BOT ⛔");
         controlMotors(0, 0); // Stop all motors
         controlWeapon(0);
