@@ -21,10 +21,8 @@
 #define RR_IS PA3     // Analog pin for right current sensing
 #define RL_IS PA2     // Analog pin for left current sensing
 
-// Weapon Motor Pins (if still needed)
-#define WLPWM PB6     // PWM-capable pin
-#define WRPWM PB7     // PWM-capable pin
-#define WEN PB8      // Digital pin
+// Weapon Motor ESC Pin (ESC only needs one PWM signal)
+#define WEAPON_ESC_PIN PB6     // PWM signal to Weapon Motor ESC
 
 // Buzzer Pin
 #define BUZZER_PIN PB12  // PWM-capable pin for buzzer/beeper
@@ -37,8 +35,14 @@
 // Built-in LED for status indication
 #define LED_PIN PC13  // Built-in LED on BluePill
 
+// Serial pins for debugging
 #define RX_PIN PB11
 #define TX_PIN PB10
+
+// ESC Configuration (for weapon motor only)
+#define ESC_MIN_PULSE 1000     // Minimum pulse width (microseconds) - full reverse
+#define ESC_NEUTRAL_PULSE 1500 // Neutral pulse width (microseconds) - stop
+#define ESC_MAX_PULSE 2000     // Maximum pulse width (microseconds) - full forward
 
 #define NOISE_THRESHOLD 15    // Ignore small values < 15 in PWM
 

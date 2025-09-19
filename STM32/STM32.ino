@@ -15,25 +15,25 @@ int prevWeapon = -1;              // Stores previous weapon value
 void setup()
 {
     Serial2.begin(115200);
-    delay(1000); // Wait for serial to initialize
+    delay(1000);
 
     // Initialize RGB LED
     setupRGBLED();
-    ledInitializing();  // Purple - System starting up
+    ledInitializing();
     
     // Initialize buzzer
     setupBuzzer();
-    buzzerStartup();    // Startup sound sequence
+    buzzerStartup();
     
     // Initialize receiver
     setupReceiver();
 
-    /* Initialize motors */
+    /* Initialize motors - IBT-2 + Weapon ESC */
     setupMotors();
     
-    ledReady();     // Green - System ready
-    buzzerReady();  // Ready beep
-    Serial2.println("STM32 BluePill Battle Bot Initialized!");
+    ledReady();
+    buzzerReady();
+    Serial2.println("STM32 BluePill Battle Bot with IBT-2 + Weapon ESC Initialized!");
 }
 
 void loop()
