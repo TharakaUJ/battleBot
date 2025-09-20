@@ -7,6 +7,7 @@
 unsigned long lastSignalTime = 0; // Tracks last valid SBUS data
 int prevWeapon = -1;              // Stores previous weapon value
 bool weaponArmed = false;         // Tracks if weapon is armed
+bool lastWeaponState = false;
 
 void setup()
 {
@@ -46,7 +47,7 @@ void loop()
         int steering = map(data.ch[STEERING_CHANNEL], 172, 1811, 255, -255); // CH2: Steering
 
         // 3-state switch (-1, 0, 1) -1 is the off state.
-        int weaponState = map(data.ch[WEAPON_STATE_CHANNEL], 500, 1500, -1, 1); // 3-state switch (-1, 0, 1)
+        int weaponState = (data.ch[WEAPON_STATE_CHANNEL] > 1000) ? 1 : -1; // 2-state switch: -1 (OFF), 1 (ON)
 
         int weapon = map(data.ch[WEAPON_CHANNEL], 172, 1811, 0, 255); // CH3: Weapon control (0-255 range for ESC)
         bool killSwitch = (data.ch[KILL_SWITCH_CHANNEL] > 1000);      // CH6: Kill switch

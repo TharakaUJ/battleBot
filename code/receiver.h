@@ -7,7 +7,7 @@
 bfs::SbusRx sbus_rx(&Serial2, S_BUS_IN, -1, true);
 bfs::SbusData data;
 
-void setupReciever()
+void setupReceiver()
 {
     /* Start SBUS communication */
     sbus_rx.Begin();
