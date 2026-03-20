@@ -1,1 +1,7 @@
 .vscode/
+
+bluepill_on_zephyr/zephyr
+bluepill_on_zephyr/build
+bluepill_on_zephyr/.west
+bluepill_on_zephyr/venv
+bluepill_on_zephyr/stm32_min_dev

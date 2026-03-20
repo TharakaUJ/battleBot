@@ -1,0 +1,58 @@
+#ifndef PINS_H
+#define PINS_H
+
+// STM32 BluePill Pin Definitions
+// Using pin numbers that correspond to STM32F103C8T6
+
+// Receiver Input Pins
+#define S_BUS_IN PA10  // Serial1 RX pin for SBUS
+
+// IBT_2 Motor Driver Pins (Left Motor) - JST near PB4-PB9
+#define LRPWM PA1     // PWM-capable pin (Timer 4, Channel 1)
+#define LLPWM PA0     // PWM-capable pin (Timer 4, Channel 2)
+#define LEN PB5       // Digital pin (Enable)
+#define LR_IS PB0     // Analog pin for right current sensing
+#define LL_IS PB1     // Analog pin for left current sensing
+
+// IBT_2 Motor Driver Pins (Right Motor) - JST near PA7-PC13
+#define RRPWM PA6     // PWM-capable pin (Timer 3, Channel 2)
+#define RLPWM PA7     // PWM-capable pin (Timer 3, Channel 3)
+#define REN PA4       // Digital pin (Enable)
+#define RR_IS PA3     // Analog pin for right current sensing
+#define RL_IS PA2     // Analog pin for left current sensing
+
+// Weapon Motor ESC Pin (ESC only needs one PWM signal)
+#define WEAPON_ESC_PIN PB6     // PWM signal to Weapon Motor ESC
+
+// Buzzer Pin
+#define BUZZER_PIN PB12  // PWM-capable pin for buzzer/beeper
+
+// RGB LED Pins
+#define RGB_RED_PIN   PB13   // PWM-capable pin for Red
+#define RGB_GREEN_PIN PB14   // PWM-capable pin for Green  
+#define RGB_BLUE_PIN  PB15   // PWM-capable pin for Blue
+
+// Built-in LED for status indication
+#define LED_PIN PC13  // Built-in LED on BluePill
+
+// Serial pins for debugging
+#define RX_PIN PB11
+#define TX_PIN PB10
+
+// ESC Configuration (for weapon motor only)
+#define ESC_MIN_PULSE 1000     // Minimum pulse width (microseconds) - full reverse
+#define ESC_NEUTRAL_PULSE 1500 // Neutral pulse width (microseconds) - stop
+#define ESC_MAX_PULSE 2000     // Maximum pulse width (microseconds) - full forward
+
+#define NOISE_THRESHOLD 15    // Ignore small values < 15 in PWM
+
+#define THROTTLE_CHANNEL 1
+#define STEERING_CHANNEL 0
+#define WEAPON_CHANNEL 2
+#define KILL_SWITCH_CHANNEL 5 // Channel 6 (zero-based index)
+#define WEAPON_STATE_CHANNEL 6 // Channel 7
+#define STEERING_INVERT_CHANNEL 7 // Channel 8
+
+#define TIMEOUT_MS 500        // Stop bot if no SBUS data received in 500ms
+
+#endif // PINS_H
